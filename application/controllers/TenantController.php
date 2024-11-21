@@ -14,7 +14,8 @@ class TenantController extends CI_Controller {
                 ->set_status_header(400)
                 ->set_output(json_encode(['error' => 'Tenant name is required.']));
         }
-    
+        $user = get_current_user();
+        echo "Current user: $user";
         // Define the path to your Bash script
         $script_path = '/home/sareehap/public_html/setup_tenant.sh'; // Update the correct path
 
