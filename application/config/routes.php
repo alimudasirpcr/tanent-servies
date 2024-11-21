@@ -39,6 +39,7 @@
 */
 
 $route['default_controller'] = "welcome";
+$route['api/create-tenant'] = 'TenantController/create_tenant';
 $route['auth'] = 'auth/login';
 $route['404_override'] = '';
 
