@@ -16,7 +16,8 @@ class TenantController extends CI_Controller {
         }
     
         // Define the path to your Bash script
-        $script_path = '/path/to/your/script.sh';
+        $script_path = '/home/sareehap/public_html/setup_tenant.sh'; // Update the correct path
+
     
         // Execute the script with the tenant name and capture the output
         $command = escapeshellcmd("bash $script_path $tenant_name");
