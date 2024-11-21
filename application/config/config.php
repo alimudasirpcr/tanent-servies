@@ -22,40 +22,10 @@
 | a PHP script and you can easily do that on your own.
 |
 */
-$base_url = '';
 // The regular expression is only a basic validation for a valid "Host" header.
 // It's not exhaustive, only checks for valid characters.
-if (isset($_SERVER['HTTP_HOST']) && preg_match('/^((\[[0-9a-f:]+\])|(\d{1,3}(\.\d{1,3}){3})|[a-z0-9\-\.]+)(:\d+)?$/i', $_SERVER['HTTP_HOST']))
-{
-	$base_url = (is_https() ? 'https' : 'http').'://'.$_SERVER['HTTP_HOST']
-		.substr($_SERVER['SCRIPT_NAME'], 0, strpos($_SERVER['SCRIPT_NAME'], basename($_SERVER['SCRIPT_FILENAME'])));
-}
-else
-{
-	if ((PHP_SAPI === 'cli' OR defined('STDIN')))
-	{
-		global $argc, $argv;
-		if(isset($argv[1]) && $argv[1] == 'ecommerce' && isset($argv[2]) && $argv[2] == 'cron' && isset($argv[3]))
-		{
-			$base_url = $argv[3];
-		}
-		if(isset($argv[1]) && $argv[1] == 'ecommerce' && isset($argv[2]) && $argv[2] == 'manual_sync' && isset($argv[3]))
-		{
-			$base_url = $argv[3];
-		}
-		
-		if(isset($argv[1]) && $argv[1] == 'shopify_webhook' && isset($argv[2]) && $argv[2] == 'save_item_in_background' && isset($argv[3]))
-		{
-			$base_url = json_decode(base64_decode(strtr($argv[3], '-_,', '+/=')));
-		}
-		if(isset($argv[1]) && $argv[1] == 'reportsmailer' && isset($argv[2]) && $argv[2] == 'cron' && isset($argv[3]))
-		{
-			$base_url = $argv[3];
-		}
-		
-	}
-}
-$config['base_url'] = $base_url;
+
+$config['base_url'] =getenv('MY_URL');;
 /*
 |--------------------------------------------------------------------------
 | Index File
