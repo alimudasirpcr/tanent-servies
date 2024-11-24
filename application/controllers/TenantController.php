@@ -101,7 +101,7 @@ class TenantController extends CI_Controller {
 
 $ftpServer = "sareehapi.oo.om";
 $ftpUser = "root@sareehapi.oo.om";
-$ftpPass = '$2a$10$FEzr31mRSEElAAwcRtyWiuUR3MuBq8oeOh/lmX9EhryUcRpjQblYu';
+$ftpPass = 'mudasir123';
 
 $connId = ftp_connect($ftpServer);
 
