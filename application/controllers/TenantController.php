@@ -82,7 +82,7 @@ class TenantController extends CI_Controller {
           CURLOPT_POSTFIELDS => json_encode(array(
               'type' => 'CNAME',
               'name' => $tenant_name.'.oo.om',
-              'content' => 'example.com', // Replace with the target for the CNAME record
+              'content' => 'ecom-multivendor.omancloud.net', // Replace with the target for the CNAME record
               'ttl' => 3600, // Time to live (optional, default is 1 for automatic TTL)
               'proxied' => false // Set to true if you want to enable Cloudflare proxy
           )),
