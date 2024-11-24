@@ -12,7 +12,7 @@ fi
 
 TENANT_NAME=$1
 SOURCE_DIR="/home/mainsare/public_html"
-DEST_DIR="/home/$TENANT_NAME"."/public_html"
+DEST_DIR="/home/$TENANT_NAME."/public_html"
 
 # Logging paths
 echo "Received tenant name: $TENANT_NAME" >> $LOG_FILE
