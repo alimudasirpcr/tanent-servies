@@ -99,22 +99,44 @@ class TenantController extends CI_Controller {
 
         log_message('info', "CWP account created successfully: " . $tenant_name);
 
-        // Execute Bash script
-        $script_path = '/home/sareehap/public_html/setup_tenant.sh';
-        $command = escapeshellcmd("bash $script_path $tenant_name 2>&1");
-        $script_output = shell_exec($command);
+        $ftpServer = "localhost";
+$ftpUser = 'root'; // FTP username
+$ftpPass = "M0hd@427504+24v1";   // FTP password
 
-        if ($script_output === null) {
-            log_message('error', "Error executing Bash script for tenant: " . $tenant_name);
-            return $this->output
-                ->set_content_type('application/json')
-                ->set_status_header(500)
-                ->set_output(json_encode(['error' => 'Failed to execute Bash script.']));
+$connId = ftp_connect($ftpServer);
+
+if ($connId && ftp_login($connId, $ftpUser, $ftpPass)) {
+    $sourceDir = "/home/main_folder";
+    $destDir = "/home/".$tenant_name;
+
+    // Upload all files
+    function ftp_upload_directory($ftp, $srcDir, $destDir) {
+        $files = scandir($srcDir);
+        foreach ($files as $file) {
+            if ($file === '.' || $file === '..') continue;
+
+            $srcFile = $srcDir . '/' . $file;
+            $destFile = $destDir . '/' . $file;
+
+            if (is_dir($srcFile)) {
+                ftp_mkdir($ftp, $destFile);
+                ftp_upload_directory($ftp, $srcFile, $destFile);
+            } else {
+                ftp_put($ftp, $destFile, $srcFile, FTP_BINARY);
+            }
         }
+    }
 
-        log_message('info', "Bash script executed successfully for tenant: " . $tenant_name);
+    ftp_upload_directory($connId, $sourceDir, $destDir);
+    ftp_close($connId);
 
-        // Respond with success
+    echo "Files copied successfully via FTP.";
+} else {
+    echo "FTP connection failed.";
+}
+
+
+// Respond with success
         return $this->output
             ->set_content_type('application/json')
             ->set_output(json_encode([
