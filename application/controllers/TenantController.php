@@ -65,39 +65,37 @@ class TenantController extends CI_Controller {
         curl_close($ch);
 
 
-
- // Check for cURL errors
-        if ($response === false) {
-            log_message('error', "cURL Error: " . curl_error($ch));
-            return $this->output
-                ->set_content_type('application/json')
-                ->set_status_header(500)
-                ->set_output(json_encode(['error' => 'Failed to connect to CWP API.']));
-        }
+        $zone_id = 'oo.om'; // Replace with your actual Zone ID
+        $api_token = 'TLle8QedjnBVjB7B5_9UrW5j6Xid76WpWN7k5ttx'; // Replace with your API Token
         
-        curl_close($ch);
-
-        // Parse the API response
-        $responseData = json_decode($response, true);
-
-        if ($responseData === null) {
-            log_message('error', "Invalid JSON response: " . $response);
-            return $this->output
-                ->set_content_type('application/json')
-                ->set_status_header(500)
-                ->set_output(json_encode(['error' => 'Invalid response from CWP API.']));
-        }
-
-        if (!isset($responseData['status']) || $responseData['status'] !== "OK") {
-            $error_message = $responseData['message'] ?? 'Unknown error';
-            log_message('error', "CWP API Error: " . $error_message);
-            return $this->output
-                ->set_content_type('application/json')
-                ->set_status_header(500)
-                ->set_output(json_encode(['error' => $error_message]));
-        }
-
-        log_message('info', "CWP account created successfully: " . $tenant_name);
+        $curl = curl_init();
+        
+        curl_setopt_array($curl, array(
+          CURLOPT_URL => "https://api.cloudflare.com/client/v4/zones/$zone_id/dns_records",
+          CURLOPT_RETURNTRANSFER => true,
+          CURLOPT_ENCODING => '',
+          CURLOPT_MAXREDIRS => 10,
+          CURLOPT_TIMEOUT => 0,
+          CURLOPT_FOLLOWLOCATION => true,
+          CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+          CURLOPT_CUSTOMREQUEST => 'POST',
+          CURLOPT_POSTFIELDS => json_encode(array(
+              'type' => 'CNAME',
+              'name' => $tenant_name.'.oo.om',
+              'content' => 'example.com', // Replace with the target for the CNAME record
+              'ttl' => 3600, // Time to live (optional, default is 1 for automatic TTL)
+              'proxied' => false // Set to true if you want to enable Cloudflare proxy
+          )),
+          CURLOPT_HTTPHEADER => array(
+            "Authorization: Bearer $api_token",
+            'Content-Type: application/json'
+          ),
+        ));
+        
+        $response = curl_exec($curl);
+        
+        curl_close($curl);
+        echo $response;
 
         // Execute Bash script
 
@@ -117,12 +115,7 @@ class TenantController extends CI_Controller {
         // log_message('info', "Bash script executed successfully for tenant: " . $tenant_name);
 
         // Respond with success
-        return $this->output
-            ->set_content_type('application/json')
-            ->set_output(json_encode([
-                'message' => 'Account created and script executed successfully.',
-                'script_output' => $script_output
-            ]));
+       
     }
     
 }
