@@ -19,6 +19,19 @@ echo "Received tenant name: $TENANT_NAME" >> $LOG_FILE
 echo "Source directory: $SOURCE_DIR" >> $LOG_FILE
 echo "Destination directory: $DEST_DIR" >> $LOG_FILE
 
+# Ensure permissions on the source directory (read and execute for the current user)
+chmod -R u+rX "$SOURCE_DIR"
+if [ $? -ne 0 ]; then
+    echo "Error: Failed to set permissions on source directory: $SOURCE_DIR" >> $LOG_FILE
+    exit 1
+fi
+
+# Ensure permissions on the destination directory (read, write, and execute for the current user)
+chmod -R u+rwX "$DEST_DIR"
+if [ $? -ne 0 ]; then
+    echo "Error: Failed to set permissions on destination directory: $DEST_DIR" >> $LOG_FILE
+    exit 1
+fi
 
 
 # Copy files
