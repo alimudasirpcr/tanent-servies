@@ -99,9 +99,9 @@ class TenantController extends CI_Controller {
 
 //         log_message('info', "CWP account created successfully: " . $tenant_name);
 
-        $ftpServer = "localhost";
-$ftpUser = 'root'; // FTP username
-$ftpPass = "M0hd@427504+24v1";   // FTP password
+$ftpServer = "sareehapi.oo.om";
+$ftpUser = "root@sareehapi.oo.om";
+$ftpPass = '$2a$10$FEzr31mRSEElAAwcRtyWiuUR3MuBq8oeOh/lmX9EhryUcRpjQblYu';
 
 $connId = ftp_connect($ftpServer);
 
