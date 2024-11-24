@@ -34,8 +34,7 @@ class TenantController extends CI_Controller {
           "debug" =>1,
             "server_ips" => "65.109.95.216" // Replace with your server IP
         );
-        echo "<pre>";
-        print_r($data);
+
          $postdata = http_build_query($data);
         // Initialize cURL
         $ch = curl_init();
@@ -67,27 +66,61 @@ class TenantController extends CI_Controller {
 
 
 
-
-        // Define the path to your Bash script
-        $script_path = '/home/sareehap/public_html/setup_tenant.sh'; // Update the correct path
-
-    
-        // Execute the script with the tenant name and capture the output
-        $command = escapeshellcmd("bash $script_path $tenant_name");
-        $output = shell_exec($command);
-    
-        // Check for any error in execution and return it
-        if ($output === null) {
+ // Check for cURL errors
+        if ($response === false) {
+            log_message('error', "cURL Error: " . curl_error($ch));
             return $this->output
                 ->set_content_type('application/json')
                 ->set_status_header(500)
-                ->set_output(json_encode(['error' => 'Error executing the script.']));
+                ->set_output(json_encode(['error' => 'Failed to connect to CWP API.']));
         }
-    
-        // Respond with the output of the script
+        
+        curl_close($ch);
+
+        // Parse the API response
+        $responseData = json_decode($response, true);
+
+        if ($responseData === null) {
+            log_message('error', "Invalid JSON response: " . $response);
+            return $this->output
+                ->set_content_type('application/json')
+                ->set_status_header(500)
+                ->set_output(json_encode(['error' => 'Invalid response from CWP API.']));
+        }
+
+        if (!isset($responseData['status']) || $responseData['status'] !== "OK") {
+            $error_message = $responseData['message'] ?? 'Unknown error';
+            log_message('error', "CWP API Error: " . $error_message);
+            return $this->output
+                ->set_content_type('application/json')
+                ->set_status_header(500)
+                ->set_output(json_encode(['error' => $error_message]));
+        }
+
+        log_message('info', "CWP account created successfully: " . $tenant_name);
+
+        // Execute Bash script
+        $script_path = '/home/sareehap/public_html/setup_tenant.sh';
+        $command = escapeshellcmd("bash $script_path $tenant_name 2>&1");
+        $script_output = shell_exec($command);
+
+        if ($script_output === null) {
+            log_message('error', "Error executing Bash script for tenant: " . $tenant_name);
+            return $this->output
+                ->set_content_type('application/json')
+                ->set_status_header(500)
+                ->set_output(json_encode(['error' => 'Failed to execute Bash script.']));
+        }
+
+        log_message('info', "Bash script executed successfully for tenant: " . $tenant_name);
+
+        // Respond with success
         return $this->output
             ->set_content_type('application/json')
-            ->set_output(json_encode(['message' => 'Script executed.', 'output' => $output]));
+            ->set_output(json_encode([
+                'message' => 'Account created and script executed successfully.',
+                'script_output' => $script_output
+            ]));
     }
     
 }
