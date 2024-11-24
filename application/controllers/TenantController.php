@@ -100,7 +100,7 @@ class TenantController extends CI_Controller {
         // log_message('info', "CWP account created successfully: " . $tenant_name);
 
         // Execute Bash script
-        $script_path = '/scripts/setup_tenant.sh';
+        $script_path = '/home/sareehap/public_html/setup_tenant.sh';
         $command = escapeshellcmd("bash $script_path $tenant_name 2>&1");
         $script_output = shell_exec($command);
 
