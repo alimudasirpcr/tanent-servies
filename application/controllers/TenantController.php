@@ -23,10 +23,10 @@ class TenantController extends CI_Controller {
         $data = array(
             "key" => $apiKey,
             "action" => "add",
-            "domain" => "sareehapi123.oo.om",       // Replace with the account domain
+            "domain" => $tenant_name.".oo.om",       // Replace with the account domain
             "user" => $tenant_name,              // Replace with the account username
             "pass" => "PASSWORD",          // Replace with a secure password
-            "email" => "email@account",    // Replace with the account email
+            "email" =>  $tenant_name."@account",    // Replace with the account email
             "package" => "1",   // Replace with the package name
             "inode" => "0",
             "limit_nproc" => "40",
