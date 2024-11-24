@@ -39,7 +39,9 @@
 */
 
 $route['default_controller'] = "welcome";
+$route['api/create-dns'] = 'TenantController/create_dns';
 $route['api/create-tenant'] = 'TenantController/create_tenant';
+$route['api/list-dns-zones'] = 'TenantController/get_dns_zones';
 $route['auth'] = 'auth/login';
 $route['404_override'] = '';
 
