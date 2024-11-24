@@ -108,7 +108,7 @@ $connId = ftp_connect($ftpServer);
 if ($connId && ftp_login($connId, $ftpUser, $ftpPass)) {
     $sourceDir = "/home/main_folder/public_html";
     $destDir = "/home/".$tenant_name ."/public_html";
-
+  echo   $(whoami);
     // Upload all files
     function ftp_upload_directory($ftp, $srcDir, $destDir) {
         $files = scandir($srcDir);
