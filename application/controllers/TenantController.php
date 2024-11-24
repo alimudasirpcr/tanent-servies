@@ -75,69 +75,46 @@ class TenantController extends CI_Controller {
 //                 ->set_output(json_encode(['error' => 'Failed to connect to CWP API.']));
 //         }
         
-//         curl_close($ch);  d
+//         curl_close($ch);
 
-//         // Parse the API response
-//         $responseData = json_decode($response, true);
+        // Parse the API response
+        // $responseData = json_decode($response, true);
 
-//         if ($responseData === null) {
-//             log_message('error', "Invalid JSON response: " . $response);
-//             return $this->output
-//                 ->set_content_type('application/json')
-//                 ->set_status_header(500)
-//                 ->set_output(json_encode(['error' => 'Invalid response from CWP API.']));
-//         }
+        // if ($responseData === null) {
+        //     log_message('error', "Invalid JSON response: " . $response);
+        //     return $this->output
+        //         ->set_content_type('application/json')
+        //         ->set_status_header(500)
+        //         ->set_output(json_encode(['error' => 'Invalid response from CWP API.']));
+        // }
 
-//         if (!isset($responseData['status']) || $responseData['status'] !== "OK") {
-//             $error_message = $responseData['message'] ?? 'Unknown error';
-//             log_message('error', "CWP API Error: " . $error_message);
-//             return $this->output
-//                 ->set_content_type('application/json')
-//                 ->set_status_header(500)
-//                 ->set_output(json_encode(['error' => $error_message]));
-//         }
+        // if (!isset($responseData['status']) || $responseData['status'] !== "OK") {
+        //     $error_message = $responseData['message'] ?? 'Unknown error';
+        //     log_message('error', "CWP API Error: " . $error_message);
+        //     return $this->output
+        //         ->set_content_type('application/json')
+        //         ->set_status_header(500)
+        //         ->set_output(json_encode(['error' => $error_message]));
+        // }
 
-//         log_message('info', "CWP account created successfully: " . $tenant_name);
+        // log_message('info', "CWP account created successfully: " . $tenant_name);
 
-$ftpServer = "ecom-multivendor.omancloud.net";
-$ftpUser = "root";
-$ftpPass = 'M0hd@427504+24v1';
+        // Execute Bash script
+        $script_path = '/scripts/setup_tenant.sh';
+        $command = escapeshellcmd("bash $script_path $tenant_name 2>&1");
+        $script_output = shell_exec($command);
 
-$connId = ftp_connect($ftpServer);
-
-if ($connId && ftp_login($connId, $ftpUser, $ftpPass)) {
-    $sourceDir = "/home/main_folder/public_html";
-    $destDir = "/home/".$tenant_name ."/public_html";
-//   echo   exec('whoami');
-    // Upload all files
-    function ftp_upload_directory($ftp, $srcDir, $destDir) {
-        $files = scandir($srcDir);
-        foreach ($files as $file) {
-            if ($file === '.' || $file === '..') continue;
-
-            $srcFile = $srcDir . '/' . $file;
-            $destFile = $destDir . '/' . $file;
-
-            if (is_dir($srcFile)) {
-                echo $destFile;
-                ftp_mkdir($ftp, $destFile);
-                ftp_upload_directory($ftp, $srcFile, $destFile);
-            } else {
-                ftp_put($ftp, $destFile, $srcFile, FTP_BINARY);
-            }
+        if ($script_output === null) {
+            log_message('error', "Error executing Bash script for tenant: " . $tenant_name);
+            return $this->output
+                ->set_content_type('application/json')
+                ->set_status_header(500)
+                ->set_output(json_encode(['error' => 'Failed to execute Bash script.']));
         }
-    }
 
-    ftp_upload_directory($connId, $sourceDir, $destDir);
-    ftp_close($connId);
+        log_message('info', "Bash script executed successfully for tenant: " . $tenant_name);
 
-    echo "Files copied successfully via FTP.";
-} else {
-    echo "FTP connection failed.";
-}
-
-
-// Respond with success
+        // Respond with success
         return $this->output
             ->set_content_type('application/json')
             ->set_output(json_encode([
