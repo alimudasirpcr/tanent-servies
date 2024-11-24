@@ -19,13 +19,7 @@ echo "Received tenant name: $TENANT_NAME" >> $LOG_FILE
 echo "Source directory: $SOURCE_DIR" >> $LOG_FILE
 echo "Destination directory: $DEST_DIR" >> $LOG_FILE
 
-# Create tenant directory
-mkdir -p $DEST_DIR
-if [ $? -eq 0 ]; then
-    echo "Tenant directory created successfully." >> $LOG_FILE
-else
-    echo "Failed to create tenant directory." >> $LOG_FILE
-fi
+
 
 # Copy files
 cp -r $SOURCE_DIR/* $DEST_DIR/
