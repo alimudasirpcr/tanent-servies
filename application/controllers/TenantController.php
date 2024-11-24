@@ -65,7 +65,7 @@ class TenantController extends CI_Controller {
         // curl_close($ch);
 
 
-        $zone_id = 'oo.om'; // Replace with your actual Zone ID
+        $zone_id = '39721e473aaf9a10f3bf65d48895d816'; // Replace with your actual Zone ID
         $api_token = 'TLle8QedjnBVjB7B5_9UrW5j6Xid76WpWN7k5ttx'; // Replace with your API Token
         
         $curl = curl_init();
