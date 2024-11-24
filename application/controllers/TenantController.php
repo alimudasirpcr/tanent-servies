@@ -99,7 +99,7 @@ class TenantController extends CI_Controller {
 
 //         log_message('info', "CWP account created successfully: " . $tenant_name);
 
-$ftpServer = "ecom-multivendor.omancloud.net/";
+$ftpServer = "ecom-multivendor.omancloud.net";
 $ftpUser = "root";
 $ftpPass = 'M0hd@427504+24v1';
 
