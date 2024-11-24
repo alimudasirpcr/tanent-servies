@@ -140,6 +140,11 @@ curl_setopt_array($curl, array(
 
         curl_close($curl);
         echo $response;
+
+        return $this->output
+                ->set_content_type('application/json')
+                ->set_status_header(400)
+                ->set_output($response);
     }
 
     
