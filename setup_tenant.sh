@@ -11,8 +11,8 @@ if [ -z "$1" ]; then
 fi
 
 TENANT_NAME=$1
-SOURCE_DIR="/home/main_folder"
-DEST_DIR="/home/$TENANT_NAME"
+SOURCE_DIR="/home/mainsar/public_html"
+DEST_DIR="/home/$TENANT_NAME"."/public_html"
 
 # Logging paths
 echo "Received tenant name: $TENANT_NAME" >> $LOG_FILE
