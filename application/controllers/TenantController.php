@@ -34,6 +34,8 @@ class TenantController extends CI_Controller {
           "debug" =>1,
             "server_ips" => "65.109.95.216" // Replace with your server IP
         );
+        echo "<pre>";
+        print_r($data);
          $postdata = http_build_query($data);
         // Initialize cURL
         $ch = curl_init();
